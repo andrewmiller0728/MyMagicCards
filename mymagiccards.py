@@ -5,12 +5,15 @@
 #   - Created by Andrew Miller, FEB 06 2022
 #
 
+import csv
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Classes
 #   - Card
 #   - Deck
 #   - Player
 #
+
 class Card:
 
     STR_FORMAT = '''Card #%02d:
@@ -99,6 +102,7 @@ class Player:
         for card in deck.card_set:
             self.add_card(card)
         return
+
 #
 # End Classes
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -106,23 +110,34 @@ class Player:
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Script
 #
-MY_NAME = "Andrew"
 
-card_a = Card("Card A", 3, "Creature", "M21", "This is card A.", 2, 3)
-card_b = Card("Card B", 2, "Instant", "M22", "This is card B.", 3, 4)
-card_c = Card("Card C", 1, "Sorcery", "M23", "This is card C.", 4, 5)
+# Constants
+NAME = "Andrew"
+CARDFILE = "./mytestcards.csv"
+
+# Functions
+def load_cardfile(filename:str) -> list:
+    card_set = list()
+    with open(filename, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            card_set.append(Card(row[0], int(row[1]), row[2], row[3], row[4], int(row[5]), int(row[6])))
+    return card_set
+
+# Variables
+my_player = Player(NAME)
 my_deck = Deck("Deck A")
-my_player = Player(MY_NAME)
+file_cards = load_cardfile(CARDFILE)
+for card in file_cards:
+    my_deck.insert(card)
 
-my_deck.insert(card_a)
-my_deck.insert(card_b)
-my_deck.insert(card_c)
-for card in my_deck.card_set:
-    print(Card.to_string(card))
-
+# add deck to player
 my_player.add_deck(my_deck)
+
+# print player cards
 for card in my_player.card_set:
     print(Card.to_string(card))
+
 #
 # End Script
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
